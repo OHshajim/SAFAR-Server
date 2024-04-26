@@ -27,10 +27,11 @@ async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
-        const spotsCollection = client.db("SpotsDB").collection("spots");
-        const countriesCollection = client.db("SpotsDB").collection("countries");
+        const database = client.db("SpotsDB");
+        const spotsCollection = database.collection("spots");
+        const countriesCollection = database.collection("countries");
 
-    // get all data 
+        // get all data 
         // for spots
         app.get("/spots", async (req, res) => {
             const cursor = spotsCollection.find()
@@ -45,7 +46,7 @@ async function run() {
             res.send(result)
         })
 
-     // get data by id 
+        // get data by id 
         app.get("/spots/:id", async (req, res) => {
             const id = req.params.id;
             const spot = req.body;
@@ -54,7 +55,18 @@ async function run() {
             res.send(result)
         })
 
-    // set data 
+        // spots for Specific Country
+        app.get("/countries/:id", async (req, res) => {
+            const name = req.params.id;
+            const spot = req.body;
+            console.log(name, spot);
+            const query = { country_Name: name }
+            const cursor = spotsCollection.find(query);
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+
+        // set data 
         app.post("/spots", async (req, res) => {
             const spot = req.body;
             console.log(spot);
