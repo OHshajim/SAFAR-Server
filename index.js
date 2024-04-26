@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require("express");
 const cors = require("cors");
 require('dotenv').config();
@@ -28,12 +28,24 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
         const spotsCollection = client.db("SpotsDB").collection("spots");
-        // app.get("/spots", async (req, res) => {
-        //     const cursor = spotsCollection.find()
-        //     const result = await cursor.toArray()
-        //     res.send(result)
-        // })
 
+        // get all data 
+        app.get("/spots", async (req, res) => {
+            const cursor = spotsCollection.find()
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+
+        // get data by id 
+        app.get("/spots/:id", async (req, res) => {
+            const id = req.params.id;
+            const spot = req.body;
+            const query = { _id: new ObjectId(id) }
+            const result = await spotsCollection.findOne(query);
+            res.send(result)
+        })
+
+        // set data 
         app.post("/spots", async (req, res) => {
             const spot = req.body;
             console.log(spot);
