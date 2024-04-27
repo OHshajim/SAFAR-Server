@@ -32,10 +32,29 @@ async function run() {
         const countriesCollection = database.collection("countries");
 
         // get all data 
-        // for spots
+        // for All spots
         app.get("/spots", async (req, res) => {
             const cursor = spotsCollection.find()
             const result = await cursor.toArray()
+            res.send(result)
+        })
+
+        // get data for my spots
+        app.get("/spots/:id", async (req, res) => {
+            const email = req.params.id;
+            const spot = req.body;
+            console.log(spot, email);
+            const query = { email: email }
+            const cursor = spotsCollection.find(query);
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+
+        // get data for one 
+        app.get("/spots/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await spotsCollection.findOne(query);
             res.send(result)
         })
 
@@ -46,31 +65,20 @@ async function run() {
             res.send(result)
         })
 
-        // get data by id 
-        app.get("/spots/:id", async (req, res) => {
-            const id = req.params.id;
-            const spot = req.body;
-            const query = { _id: new ObjectId(id) }
-            const result = await spotsCollection.findOne(query);
-            res.send(result)
-        })
-
         // spots for Specific Country
         app.get("/countries/:id", async (req, res) => {
             const name = req.params.id;
-            const spot = req.body;
-            console.log(name, spot);
             const query = { country_Name: name }
             const cursor = spotsCollection.find(query);
             const result = await cursor.toArray()
             res.send(result)
         })
 
-        // set data 
+        // Add data 
         app.post("/spots", async (req, res) => {
             const spot = req.body;
             console.log(spot);
-            const result = await spotsCollection.insertOne(spot)
+            const result = await userSpotsCollection.insertOne(spot)
             res.send(result);
         })
 
