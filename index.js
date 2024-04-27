@@ -39,22 +39,22 @@ async function run() {
             res.send(result)
         })
 
-        // get data for my spots
-        app.get("/spots/:id", async (req, res) => {
-            const email = req.params.id;
-            const spot = req.body;
-            console.log(spot, email);
-            const query = { email: email }
-            const cursor = spotsCollection.find(query);
-            const result = await cursor.toArray()
+
+        // // get data for one 
+        app.get("/singleSpots/:id", async (req, res) => {
+            const id = req.params.id;
+            console.log(id);
+            const query = { _id: new ObjectId(id) } ;
+            const result = await spotsCollection.findOne(query);
             res.send(result)
         })
 
-        // get data for one 
-        app.get("/spots/:id", async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: new ObjectId(id) }
-            const result = await spotsCollection.findOne(query);
+        // get data for my spots
+        app.get("/spots/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email }
+            const cursor = spotsCollection.find(query);
+            const result = await cursor.toArray()
             res.send(result)
         })
 
@@ -78,7 +78,7 @@ async function run() {
         app.post("/spots", async (req, res) => {
             const spot = req.body;
             console.log(spot);
-            const result = await userSpotsCollection.insertOne(spot)
+            const result = await spotsCollection.insertOne(spot)
             res.send(result);
         })
 
