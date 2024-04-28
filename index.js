@@ -38,6 +38,11 @@ async function run() {
             const result = await cursor.toArray()
             res.send(result)
         })
+        app.get("/favoriteSpots", async (req, res) => {
+            const query = { email: "" ,name : ""}
+            const result = await spotsCollection.find(query).toArray()
+            res.send(result)
+        })
 
 
         // // get data for one 
@@ -58,7 +63,7 @@ async function run() {
             res.send(result)
         })
 
-        // for Sort
+        // for Sort data
         app.get('/sortedSpots', async (rew, res) => {
             const cursor = spotsCollection.find().sort({ "average_cost": 1 });
             const result = await cursor.toArray()
