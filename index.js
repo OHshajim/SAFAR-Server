@@ -44,7 +44,7 @@ async function run() {
         app.get("/singleSpots/:id", async (req, res) => {
             const id = req.params.id;
             console.log(id);
-            const query = { _id: new ObjectId(id) } ;
+            const query = { _id: new ObjectId(id) };
             const result = await spotsCollection.findOne(query);
             res.send(result)
         })
@@ -54,6 +54,13 @@ async function run() {
             const email = req.params.email;
             const query = { email: email }
             const cursor = spotsCollection.find(query);
+            const result = await cursor.toArray()
+            res.send(result)
+        })
+
+        // for Sort
+        app.get('/sortedSpots', async (rew, res) => {
+            const cursor = spotsCollection.find().sort({ "average_cost": 1 });
             const result = await cursor.toArray()
             res.send(result)
         })
